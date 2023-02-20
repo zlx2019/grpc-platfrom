@@ -1,0 +1,33 @@
+syntax = "proto3";
+package payload;
+option go_package = "./;produce";
+
+import "google/protobuf/empty.proto";
+
+// 单个请求参数流消息
+message ProduceRequest{
+  // 产品id
+  sint32 produce_id = 1;
+}
+
+// 响应参数
+message ProduceReply{
+  // 是否已读取完请求流的参数
+  bool completed = 1;
+  // 响应消息
+  string msg = 2;
+}
+
+message BodyReply{
+  string body = 1;
+}
+
+
+
+service ProduceService{
+  // 定义一个请求参数为流、响应参数为消息的接口
+  rpc SendStream(stream ProduceRequest)returns(ProduceReply);
+  // 定义一个返回值为数据流的接口
+  rpc GetStream(google.protobuf.Empty)returns(stream BodyReply);
+
+}

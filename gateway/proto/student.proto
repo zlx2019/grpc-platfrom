@@ -1,0 +1,73 @@
+// 指定proto语言版本
+syntax = "proto3";
+// 生成go文件的包路径;包的别名
+option go_package = "/pb/student;student";
+// proto的包路径
+package gateway.proto.student;
+import "google/protobuf/empty.proto";
+
+
+// 导入google的http 和 annotations
+// gateway必须依赖这两个
+import "google/api/http.proto";
+import "google/api/annotations.proto";
+
+
+
+// 查询请求参数
+message QueryRequest{
+  uint64 id = 1;
+}
+
+// 新增请求参数
+message SaveRequest{
+  uint64 id = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
+}
+
+// 单个返回值参数
+message StudentReply{
+  uint64 id = 1;
+  string username = 2;
+  string password = 3;
+  string email = 4;
+}
+// 序列返回值参数
+message StudentListReply{
+  repeated StudentReply students = 1;
+}
+
+// 定义服务
+service StudentService{
+
+  // 获取所有学生信息
+  rpc Students(google.protobuf.Empty)returns(StudentListReply){
+    // 映射为 Get HTTP
+    // Get /v1
+    option(google.api.http) = {
+      get: "/v1"
+    };
+  }
+
+  // 根据id获取学生信息
+  rpc GetStudent(QueryRequest)returns(StudentReply){
+    // 映射为 Get HTTP
+    // Get /v1/xxx
+    // 通过uri传参,id会自动映射到QueryRequest.id字段
+    option(google.api.http) = {
+      get: "/v1/{id}"
+    };
+  }
+  // 新增学生信息
+  rpc SaveStudent(SaveRequest)returns(google.protobuf.Empty){
+    // 映射为 Post HTTP
+    // Post /v1  {id:xxx,username:xxx,...}
+    // body: * 表示将HTTP的body允许接收任何值,最终会根据字段名映射到SaveRequest的字段中.
+    option(google.api.http) = {
+      post: "/v1",
+      body: "*"
+    };
+  }
+}

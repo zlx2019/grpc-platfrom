@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+
+// Go生成的package 第一个`member`表示在--go_out=指定的目录下创建一个member文件夹,该文件的package为member
+option go_package = "./member;member";
+
+// java生成的的package路径
+option java_package = "com.zero.pb.member";
+// 指定java类名
+option java_outer_classname = "Member";
+// 是否生成的所有java文件 合并到一个文件内
+option java_multiple_files = true;
+// 是否生成定义的service服务,如果为false，那怕定义了也不会生成.
+option java_generic_services = true;
+option optimize_for = SPEED;
+
+// 请求参数
+message MemberRequest{
+  sint64 id = 1;
+}
+// 请求返回参数
+message MemberReply{
+  string user_name = 1;
+  string pass_word = 2;
+}
+
+// 定义Member的服务
+service MemberService{
+  //定义接口
+  rpc GetMember(MemberRequest)returns(MemberReply);
+}

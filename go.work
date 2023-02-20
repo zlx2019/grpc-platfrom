@@ -1,0 +1,6 @@
+go 1.18
+
+use ./hello
+use ./protobuf-demo
+use ./stream
+use ./gateway

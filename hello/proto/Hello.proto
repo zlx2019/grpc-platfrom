@@ -1,0 +1,30 @@
+// 定义proto的版本
+syntax = "proto3";
+
+// proto文件的 package,其他proto文件引用时使用
+package hello;
+
+// 指定生成go语言后的 package名
+// Go语言生成后的文件夹路径 会创建在com.zero.hello文件夹内
+option go_package = "./;pb";
+
+// 定义实体,用于作为接口请求参数
+message Request{
+  oneof img_type{
+    string jpg = 1;
+    string png = 2;
+  }
+}
+
+// 定义实体,用于作为接口返回值
+message Response{
+  string resp_message = 1;
+}
+
+// 定义服务,服务内可以定义多个接口
+service HelloService{
+
+  // 定义接口
+  // 接口格式为: rpc 接口名(请求参数)returns(返回参数)
+  rpc SendMessage(Request)returns(Response);
+}
